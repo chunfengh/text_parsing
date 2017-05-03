@@ -190,13 +190,13 @@ with open("raw_marked_data.txt", "r") as fp:
                 print t
               print ept
               print spt
-              if not spt.parent:
+              if not spt.parent and ept.parent != spt:
                 spt.parent = ept.parent
                 spt.r = 'and'
         elif spt:
           # Loop back to first root, set as parent with relation and
           for tt in reversed(tokens):
-            if not tt.parent:
+            if not tt.parent and spt != tt:
               spt.parent = tt
               spt.r = 'and'
               break
@@ -231,8 +231,19 @@ with open("raw_marked_data.txt", "r") as fp:
       # fill token_id for matched tokens
       for index in range(0, len(match_matrix)):
         if match_matrix[index] != -1:
-           tokens[match_matrix[index]].id = index+1
-
+           tokens[match_matrix[index]].id = index+2
+      new_parts = []
+      new_parts.append('1') # f0
+      new_parts.append('root')      # f1
+      new_parts.append('_')      # f2
+      new_parts.append('None')      # f3
+      new_parts.append('None')      # f4
+      new_parts.append('_')      # f5
+      new_parts.append('0')      # f6
+      new_parts.append('_')      # f7
+      new_parts.append('_')      # f8
+      new_parts.append('SpaceAfter=No') # f9
+      processed_list.append(new_parts)
       for index in range(0, len(seg_ss)):
         token = None
         if match_matrix[index] != -1:
@@ -242,13 +253,13 @@ with open("raw_marked_data.txt", "r") as fp:
         print seg_ss[index]
         print token
         new_parts = []
-        new_parts.append(str(index+1)) # f0
+        new_parts.append(str(index+2)) # f0
         new_parts.append(seg_ss[index])      # f1
         new_parts.append('_')      # f2
         new_parts.append(token.tag if token else 'None')      # f3
         new_parts.append(token.tag if token else 'None')      # f4
         new_parts.append('_')      # f5
-        new_parts.append(str(token.parent.id) if token and token.parent else '0')      # f6
+        new_parts.append(str(token.parent.id) if token and token.parent else '1')      # f6
         new_parts.append(token.r if token else '_')      # f7
         new_parts.append('_')      # f8
         new_parts.append('SpaceAfter=No') # f9
