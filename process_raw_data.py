@@ -244,6 +244,7 @@ with open("raw_marked_data.txt", "r") as fp:
       new_parts.append('_')      # f8
       new_parts.append('SpaceAfter=No') # f9
       processed_list.append(new_parts)
+      lastNone = 1
       for index in range(0, len(seg_ss)):
         token = None
         if match_matrix[index] != -1:
@@ -259,11 +260,13 @@ with open("raw_marked_data.txt", "r") as fp:
         new_parts.append(token.tag if token else 'None')      # f3
         new_parts.append(token.tag if token else 'None')      # f4
         new_parts.append('_')      # f5
-        new_parts.append(str(token.parent.id) if token and token.parent else '1')      # f6
+        new_parts.append(str(token.parent.id) if token and token.parent else ('1' if token else str(lastNone)))      # f6
         new_parts.append(token.r if token else '_')      # f7
         new_parts.append('_')      # f8
         new_parts.append('SpaceAfter=No') # f9
         processed_list.append(new_parts)
+        if token == None:
+          lastNone = index + 2
       
       fs.write('# sent_id = %d\n' % sent_num)
       sent_num += 1
