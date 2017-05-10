@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-fs = open("dev-data0.txt", "w")
-fw = open("dict4.txt", "w")
+fs = open("label-data.txt", "w")
+fw = open("dict5.txt", "w")
 
 dict = {}
-with open("dev-data.txt", "r") as fp:
+with open("label.txt", "r") as fp:
   for line in fp:
     parts = line.split('\t')
     if len(parts) == 10:
@@ -20,7 +20,13 @@ with open("dev-data.txt", "r") as fp:
       new_parts.append(parts[8]) # f8
       new_parts.append(parts[9]) # f9
       fs.write('\t'.join(new_parts))
+      if parts[1] in dict:
+         dict[parts[1]] += 1
+      else:
+         dict[parts[1]] = 1
     else:
+      if len(line) != 1:
+        fs.write('# ')
       fs.write(line)
 
 fs.close()
